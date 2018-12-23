@@ -575,3 +575,43 @@ TEST_CASE("Test Query", "[query]")
         CHECK(r.second == "HelloWorld");
     }
 }
+
+#ifndef CATCH_CONFIG_MAIN
+int main()
+{
+    size_t N,Q;
+    std::cin >> N >> Q;
+
+    std::string input;
+    for(size_t i=0;i<N;i++)
+    {
+        std::string line;
+        std::getline(std::cin, line);
+        if(line.empty())
+        {
+            std::getline(std::cin, line);
+        }
+        input.append(line);
+    }
+
+    Parser p;
+    std::vector<Tag> tags = p.parse(input);
+
+    for(size_t i=0;i<Q;i++)
+    {
+        std::string query_str;
+        std::getline(std::cin, query_str);
+        auto result = query(tags, query_str);
+        if(!result.first)
+        {
+            std::cout << "Not Found!" << std::endl;
+        }
+        else
+        {
+            std::cout << result.second << std::endl;
+        }
+    }
+
+    return 0;
+}
+#endif
