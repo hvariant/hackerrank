@@ -12,4 +12,5 @@ add_subdirectory(cpp/lc-merge-sorted/)
 add_subdirectory(cpp/lc-pascal-triangle/)
 add_subdirectory(cpp/lc-valid-parentheses/)
 add_subdirectory(cpp/lc-linked-list-cycle/)
+add_subdirectory(cpp/lc-delete-ll-node/)
 
