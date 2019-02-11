@@ -8,5 +8,7 @@ add_subdirectory(cpp/lc-stock-array-ii/)
 add_subdirectory(cpp/lc-tree-level-order/)
 add_subdirectory(cpp/lc-sorted-to-tree/)
 add_subdirectory(cpp/lc-first-bad-version/)
-add_subdirectory(cpp/lc-merge-sorted)
+add_subdirectory(cpp/lc-merge-sorted/)
+add_subdirectory(cpp/lc-pascal-triangle/)
+add_subdirectory(cpp/lc-valid-parentheses/)
 
