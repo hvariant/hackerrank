@@ -17,4 +17,5 @@ add_subdirectory(cpp/lc-rotate-array/)
 add_subdirectory(cpp/lc-contains-duplicate/)
 add_subdirectory(cpp/lc-single-number/)
 add_subdirectory(cpp/lc-array-intersect/)
+add_subdirectory(cpp/lc-array-move-zeroes/)
 
