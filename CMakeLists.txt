@@ -20,4 +20,5 @@ add_subdirectory(cpp/lc-array-intersect/)
 add_subdirectory(cpp/lc-array-move-zeroes/)
 add_subdirectory(cpp/lc-two-sum/)
 add_subdirectory(cpp/lc-rotate-matrix/)
+add_subdirectory(cpp/lc-linked-list-palindrome/)
 
