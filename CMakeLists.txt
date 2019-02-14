@@ -14,4 +14,5 @@ add_subdirectory(cpp/lc-valid-parentheses/)
 add_subdirectory(cpp/lc-linked-list-cycle/)
 add_subdirectory(cpp/lc-delete-ll-node/)
 add_subdirectory(cpp/lc-rotate-array/)
+add_subdirectory(cpp/lc-contains-duplicate/)
 
