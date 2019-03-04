@@ -26,4 +26,5 @@ add_subdirectory(cpp/lc-string-reverse-int/)
 add_subdirectory(cpp/lc-string-first-unique-char/)
 add_subdirectory(cpp/lc-string-anagram/)
 add_subdirectory(cpp/lc-string-valid-palindrome/)
+add_subdirectory(cpp/lc-string-to-integer/)
 
