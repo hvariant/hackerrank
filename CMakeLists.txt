@@ -23,4 +23,5 @@ add_subdirectory(cpp/lc-rotate-matrix/)
 add_subdirectory(cpp/lc-linked-list-palindrome/)
 add_subdirectory(cpp/lc-linked-list-remove-nth-from-end/)
 add_subdirectory(cpp/lc-string-reverse-int/)
+add_subdirectory(cpp/lc-string-first-unique-char/)
 
