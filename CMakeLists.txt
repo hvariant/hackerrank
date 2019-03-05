@@ -28,4 +28,4 @@ add_subdirectory(cpp/lc-string-anagram/)
 add_subdirectory(cpp/lc-string-valid-palindrome/)
 add_subdirectory(cpp/lc-string-to-integer/)
 add_subdirectory(cpp/lc-string-count-and-say/)
-
+add_subdirectory(cpp/lc-string-longest-common-prefix/)
