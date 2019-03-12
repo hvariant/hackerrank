@@ -4,69 +4,46 @@
 #include <unordered_map>
 #include <limits>
 
+// expand around centre
 class Solution {
 public:
    std::string longestPalindrome(const std::string& s) {
       if (s.empty()) return "";
 
-      std::string s_odd = longestOddPallinDrome(s), s_even = longestEvenPalindrome(s);
-      return s_odd.size() > s_even.size() ? s_odd : s_even;
+      std::pair<int, int> longest = { 0, 1 };
+      for (int i = 0; i < s.size(); i++)
+      {
+         auto odd_palindrome = expand(s, i, i);
+         if (odd_palindrome.second > longest.second)
+         {
+            longest = odd_palindrome;
+         }
+         if (s[i] == s[i + 1])
+         {
+            auto even_palindrome = expand(s, i, i + 1);
+            if (even_palindrome.second > longest.second)
+            {
+               longest = even_palindrome;
+            }
+         }
+      }
+
+      return s.substr(longest.first, longest.second);
    }
+
 private:
-   std::string longestEvenPalindrome(const std::string& s)
+   std::pair<int, int> expand(const std::string& s, int begin, int end)
    {
-      const size_t dummy_index = std::numeric_limits<size_t>::max();
-      size_t max_index = dummy_index, max_offset = 0;
-      for (size_t index = 0; index < s.size() - 1; index++)
+      int i = begin, j = end;
+      while (i >= 0 && j < s.size() && s[i] == s[j])
       {
-         if (s[index] != s[index + 1]) continue;
-         size_t offset = 0;
-         for (;
-            index >= offset && index + 1 + offset < s.size() && s[index - offset] == s[index + 1 + offset];
-            offset++)
-         {
-         }
-         if (offset > 0)
-         {
-            offset--;
-         }
-
-         if (max_index == dummy_index || offset > max_offset)
-         {
-            max_offset = offset;
-            max_index = index;
-         }
+         i--;
+         j++;
       }
-      if (max_index == dummy_index) return "";
-      size_t start_index = max_index - max_offset;
-      size_t max_size = max_offset * 2 + 2;
-      return s.substr(start_index, max_size);
-   }
-   std::string longestOddPallinDrome(const std::string& s)
-   {
-      size_t max_index = 0, max_offset = 0;
-      for (size_t index = 1; index < s.size() - 1; index++)
-      {
-         size_t offset = 0;
-         for (;
-            index >= offset && index + offset < s.size() && s[index - offset] == s[index + offset];
-            offset++)
-         {
-         }
-         if (offset > 0)
-         {
-            offset--;
-         }
+      i++; j--;
 
-         if (offset > max_offset)
-         {
-            max_offset = offset;
-            max_index = index;
-         }
-      }
-      size_t start_index = max_index - max_offset;
-      size_t substr_size = max_offset * 2 + 1;
-      return s.substr(start_index, substr_size);
+      if (i >= j) return { begin, end - begin + 1 };
+      return { i, j - i + 1 };
    }
 };
 
@@ -112,3 +89,8 @@ TEST_CASE("Example6")
    CHECK(solution.longestPalindrome("cdbbdo") == "dbbd");
 }
 
+TEST_CASE("Example7")
+{
+   Solution solution;
+   CHECK(solution.longestPalindrome("bb") == "bb");
+}
