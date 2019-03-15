@@ -13,29 +13,35 @@ struct ListNode {
 
 class Solution {
 public:
+   // an explanation of this algorithm:
+   // say you have these two linked lists:
+   //            o v
+   //                # -> # -> #
+   //  0 -> 0 -> 0 ^
+   //
+   // by moving curA to headB and curB to headA,
+   // what is happening is that the parts before the common suffix are effectively stitched together, i.e.:
+   // 
+   //  0 -> 0 -> 0 -> o v
+   //                   # -> # -> #
+   //  o -> 0 -> 0 -> 0 ^
+   //
+   // which makes the two prefix parts have the same length, therefore A and B will arrive at the first node of
+   // the common suffix at the same time.
+   //
+   // It is trivial to see that when there is no common suffix, curA == curB == nullptr.
+   // The proof is left as exercise to the reader.
+
    ListNode* getIntersectionNode(ListNode *headA, ListNode *headB) {
-      auto nodes = std::unordered_set<ListNode*>{};
+      auto curA = headA;
+      auto curB = headB;
+
+      while (curA != curB)
       {
-         auto cur = headB;
-         while (cur)
-         {
-            nodes.insert(cur);
-            cur = cur->next;
-         }
+         curA = (curA == nullptr) ? headB : curA->next;
+         curB = (curB == nullptr) ? headA : curB->next;
       }
 
-      {
-         auto cur = headA;
-         while (cur)
-         {
-            if (nodes.count(cur) > 0)
-            {
-               return cur;
-            }
-            cur = cur->next;
-         }
-      }
-
-      return nullptr;
+      return curA;
    }
 };
