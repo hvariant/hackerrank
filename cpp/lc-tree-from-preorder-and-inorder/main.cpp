@@ -16,43 +16,89 @@ namespace
   };
 }
 
+// https://www.codeproject.com/Articles/418776/How-to-replace-recursive-functions-using-stack-and
 class Solution {
 public:
   TreeNode* buildTree(const std::vector<int>& preorder, const std::vector<int>& inorder) {
-    return _buildTree(preorder.begin(), preorder.end(), inorder.begin(), inorder.end());
+    std::stack<Snapshot> S;
+
+    TreeNode* ret_val = nullptr;
+    S.push({Stage::BEGIN, preorder.begin(), preorder.end(), inorder.begin(), inorder.end()});
+    while(!S.empty())
+    {
+      auto snapshot = S.top();
+      S.pop();
+
+      if(snapshot.preorder_begin == snapshot.preorder_end)
+      {
+        ret_val = nullptr;
+        continue;
+      }
+      if(snapshot.preorder_begin + 1 == snapshot.preorder_end)
+      {
+        ret_val = new TreeNode{*(snapshot.preorder_begin)};
+        continue;
+      }
+
+      switch(snapshot.stage)
+      {
+        case Stage::BEGIN:
+        {
+          snapshot.root = new TreeNode{*(snapshot.preorder_begin)};
+          auto it = std::find(snapshot.inorder_begin, snapshot.inorder_end, *(snapshot.preorder_begin));
+          auto i = std::distance(snapshot.inorder_begin, it);
+
+          snapshot.stage = Stage::RIGHT;
+          S.push(snapshot);
+          S.push({Stage::BEGIN,
+                  snapshot.preorder_begin + i + 1, snapshot.preorder_end,
+                  snapshot.inorder_begin + i + 1,  snapshot.inorder_end
+                 });
+
+          snapshot.stage = Stage::LEFT;
+          S.push(snapshot);
+          S.push({Stage::BEGIN,
+                  snapshot.preorder_begin + 1, snapshot.preorder_begin + 1 + i,
+                  snapshot.inorder_begin,      snapshot.inorder_begin + i
+                 });
+          break;
+        }
+        case Stage::LEFT:
+        {
+          snapshot.root->left = ret_val;
+          break;
+        }
+        case Stage::RIGHT:
+        {
+          snapshot.root->right = ret_val;
+          ret_val = snapshot.root;
+          break;
+        }
+      }
+    }
+
+    return ret_val;
   }
 
 private:
-  TreeNode* _buildTree(
-    const std::vector<int>::const_iterator preorder_begin,
-    const std::vector<int>::const_iterator preorder_end,
-    const std::vector<int>::const_iterator inorder_begin,
-    const std::vector<int>::const_iterator inorder_end)
+  enum class Stage
   {
-    if(preorder_begin == preorder_end)
-    {
-      return nullptr;
-    }
-    if(preorder_begin + 1 == preorder_end)
-    {
-      return new TreeNode{*preorder_begin};
-    }
+    BEGIN,
+    LEFT,
+    RIGHT
+  };
 
-    TreeNode* root = new TreeNode{*preorder_begin};
-    auto it = std::find(inorder_begin, inorder_end, *preorder_begin);
-    auto i = std::distance(inorder_begin, it);
+  struct Snapshot
+  {
+    Stage stage;
 
-    root->left = buildTree(
-          std::vector<int>{preorder_begin + 1, preorder_begin + 1 + i},
-          std::vector<int>{inorder_begin, inorder_begin + i}
-          );
-    root->right = buildTree(
-          std::vector<int>{preorder_begin + i + 1, preorder_end},
-          std::vector<int>{inorder_begin + i + 1, inorder_end}
-          );
+    const std::vector<int>::const_iterator preorder_begin;
+    const std::vector<int>::const_iterator preorder_end;
+    const std::vector<int>::const_iterator inorder_begin;
+    const std::vector<int>::const_iterator inorder_end;
 
-    return root;
-  }
+    TreeNode* root{nullptr};
+  };
 };
 
 bool compare_tree(TreeNode* cur1, TreeNode* cur2)
