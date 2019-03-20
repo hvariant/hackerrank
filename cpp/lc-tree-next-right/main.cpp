@@ -21,25 +21,21 @@ public:
   Node* connect(Node* root) {
     if(root == nullptr) return nullptr;
 
-    std::queue<Node*> Q;
-    Q.push(root);
-
-    while(!Q.empty())
+    Node* head = root;
+    while(head)
     {
-      Node* cur = Q.front();
-      Q.pop();
-
-      if(cur->left != nullptr && cur->right != nullptr)
+      Node* cur = head;
+      while(cur && cur->left)
       {
         cur->left->next = cur->right;
-        if(cur->next != nullptr)
+        if(cur->next)
         {
           cur->right->next = cur->next->left;
         }
-
-        Q.push(cur->left);
-        Q.push(cur->right);
+        cur = cur->next;
       }
+
+      head = head->left;
     }
 
     return root;
@@ -79,7 +75,7 @@ TEST_CASE("null 1")
 
   auto expected = new Node{1};
 
-  output = Solution().connect(output);
+  Solution().connect(output);
   CHECK(tree_equal(output, expected));
 }
 
@@ -106,6 +102,6 @@ TEST_CASE("example 1")
   expected->left->right->next = expected->right->left;
   expected->right->left->next = expected->right->right;
 
-  output = Solution().connect(output);
+  Solution().connect(output);
   CHECK(tree_equal(output, expected));
 }
