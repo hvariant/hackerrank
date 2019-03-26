@@ -3,78 +3,69 @@
 #include <catch2/catch.hpp>
 
 #include <vector>
-#include <set>
 #include <string>
-
-namespace
-{
-   std::map<size_t, std::set<std::string>> results;
-}
+#include <queue>
 
 class Solution {
 public:
    std::vector<std::string> generateParenthesis(size_t n)
    {
-      auto r = _generateParenthesis(n);
-      r.erase("");
-      return std::vector<std::string>{r.begin(), r.end()};
-   }
-private:
-   std::set<std::string> _generateParenthesis(size_t n)
-   {
-      if (n == 0) return { "" };
-      if (n == 1) return { "()" };
-      if (results.count(n) > 0)
-      {
-         return results.at(n);
-      }
+      if (n == 0) return {};
 
-      auto ret = std::set<std::string>{};
-      // surround
+      struct S
       {
-         auto v = _generateParenthesis(n - 1);
-         for (const auto& s : v)
+         size_t open;
+         size_t close;
+         std::string current;
+      };
+
+      std::vector<std::string> ret;
+
+      // this will put all sequences that maintain
+      //    cur.open >= cur.close for all positions
+      // to the return list
+      std::queue<S> Q;
+      Q.push({ 0, 0, "" });
+      while (!Q.empty())
+      {
+         auto cur = Q.front();
+         Q.pop();
+
+         if (cur.open == n && cur.close == n)
          {
-            ret.insert("(" + s + ")");
+            ret.push_back(cur.current);
          }
-      }
-      // in between
-      for (size_t i = 0; i <= n - 1; i++)
-      {
-         auto v_before = _generateParenthesis(i);
-         auto v_after = _generateParenthesis(n - 1 - i);
-
-         for (const auto& s1 : v_before)
+         if (cur.open < n)
          {
-            for (const auto& s2 : v_after)
-            {
-               auto s_before = "(" + s1 + ")" + s2;
-               auto s_after = s1 + "(" + s2 + ")";
-
-               ret.insert(s_before);
-               ret.insert(s_after);
-            }
+            Q.push({ cur.open + 1, cur.close, cur.current + "(" });
          }
-      }
-      // adjacent
-      for (size_t i = 1; i <= n - 1; i++)
-      {
-         auto v_before = _generateParenthesis(i);
-         auto v_after = _generateParenthesis(n - i);
-
-         for (const auto& s1 : v_before)
+         if (cur.close < n && cur.open > cur.close)
          {
-            for (const auto& s2 : v_after)
-            {
-               ret.insert(s1 + s2);
-            }
+            Q.push({ cur.open, cur.close + 1, cur.current + ")" });
          }
       }
 
-      results[n] = ret;
       return ret;
    }
 };
+
+TEST_CASE("example 0")
+{
+   Solution solution;
+   CHECK(solution.generateParenthesis(0).empty());
+}
+
+TEST_CASE("example 1")
+{
+   Solution solution;
+   CHECK(solution.generateParenthesis(1) == std::vector<std::string>{"()"});
+}
+
+TEST_CASE("example 2")
+{
+   Solution solution;
+   CHECK(solution.generateParenthesis(2) == std::vector<std::string>{"(())", "()()"});
+}
 
 TEST_CASE("example 3")
 {
