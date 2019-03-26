@@ -13,59 +13,34 @@ namespace
   };
 }
 
-#include <unordered_map>
-
 class Solution {
 public:
-   int kthSmallest(TreeNode* root, int k) {
-      std::unordered_map<TreeNode*, size_t> family_count;
-      (void)countFamily(root, family_count);
-      family_count[nullptr] = 0;
-
-      return _kthSmallest(root, k, family_count);
-   }
-private:
-   int _kthSmallest(TreeNode* root, int k, std::unordered_map<TreeNode*, size_t>& family_count)
+   int kthSmallest(TreeNode* root, int k)
    {
-      if (k == 1)
-      {
-         while (root->left)
-         {
-            root = root->left;
-         }
-         return root->val;
-      }
-
-      if (family_count[root->left] + 1 < k)
-      {
-         return _kthSmallest(root->right, k - family_count[root->left] - 1, family_count);
-      }
-      else if (family_count[root->left] + 1 == k)
-      {
-         return root->val;
-      }
-      else
-      {
-         return _kthSmallest(root->left, k, family_count);
-      }
+      return _kthSmallest(root, k);
    }
 
-   size_t countFamily(TreeNode* root, std::unordered_map<TreeNode*, size_t>& family_count)
+private:
+   int _kthSmallest(TreeNode* root, int& k)
    {
       if (root == nullptr)
       {
          return 0;
       }
-      if (family_count.count(root) > 0)
+
+      int val = _kthSmallest(root->left, k);
+      if (k == 0)
       {
-         return family_count[root];
+         return val;
       }
 
-      size_t left_children_count = countFamily(root->left, family_count);
-      size_t right_children_count = countFamily(root->right, family_count);
+      k--;
+      if (k == 0)
+      {
+         return root->val;
+      }
 
-      family_count[root] = left_children_count + right_children_count + 1;
-      return family_count[root];
+      return _kthSmallest(root->right, k);
    }
 };
 
