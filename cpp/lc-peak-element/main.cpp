@@ -14,7 +14,7 @@ public:
          return 0;
       }
 
-      int left = 0, right = nums.size();
+      int left = 0, right = nums.size() - 1;
       const auto is_peak = [&nums](int i)
       {
          if (i == 0)
@@ -49,7 +49,10 @@ public:
             {
                right = mid - 1;
             }
-            // otherwise, the peak is on the right side
+            // otherwise, there is a probably peak on the right side
+            // a special case is this: 1 2 9 9 9
+            // you could consider any of the 9's a 'half-peak', but it's not entirely clear
+            // in the problem description that this should be accepted
             else
             {
                while (mid < right && nums[mid] >= nums[mid + 1]) mid++;
@@ -76,3 +79,9 @@ TEST_CASE("Example2")
   CHECK(correct);
 }
 
+TEST_CASE("Example3")
+{
+  Solution solution;
+  auto v = solution.findPeakElement({ 1,2,9,9,9 });
+  CHECK(v == 4);
+}
