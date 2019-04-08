@@ -7,24 +7,21 @@
 class Solution {
 public:
    int coinChange(const std::vector<int>& coins, size_t amount) {
-      std::vector<size_t> dp(amount + 1, std::numeric_limits<size_t>::max());
+      std::vector<int> dp(amount + 1, std::numeric_limits<int>::max());
 
       dp[0] = 0;
-      for (size_t x = 1; x <= amount; x++)
+      for (int x = 1; x <= amount; x++)
       {
          for (auto coin : coins)
          {
-            for (size_t i = 1; coin*i <= x; i++)
+            if (x >= coin && dp[x - coin] != std::numeric_limits<int>::max())
             {
-               if (dp[x - coin * i] != std::numeric_limits<size_t>::max())
-               {
-                  dp[x] = std::min(dp[x], dp[x - coin * i] + i);
-               }
+               dp[x] = std::min(dp[x], dp[x - coin] + 1);
             }
          }
       }
 
-      return dp[amount] == std::numeric_limits<size_t>::max() ? -1 : static_cast<int>(dp[amount]);
+      return dp[amount] == std::numeric_limits<int>::max() ? -1 : dp[amount];
    }
 };
 
