@@ -6,18 +6,25 @@
 
 class Solution {
 public:
+   // C(m+n-2, n-1) = C(m+n-2,m-1)
    int uniquePaths(int m, int n)
    {
-      std::vector<std::vector<size_t>> dp(m, std::vector<size_t>(n, 1));
-      for (size_t i = 1; i < m; i++)
+      int N = m + n - 2;
+      int R = std::min(m - 1, n - 1);
+
+      uint64_t num = 1;
+      uint64_t denom = 1;
+
+      for (size_t i = 0; i < R; i++)
       {
-         for (size_t j = 1; j < n; j++)
-         {
-            dp[i][j] = dp[i - 1][j] + dp[i][j - 1];
-         }
+         num *= (N - i);
+      }
+      for (size_t i = 0; i < R; i++)
+      {
+         denom *= (R - i);
       }
 
-      return dp[m - 1][n - 1];
+      return static_cast<int>(num / denom);
    }
 };
 
