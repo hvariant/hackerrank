@@ -7,12 +7,22 @@
 class Solution {
 public:
    bool searchMatrix(const std::vector<std::vector<int>>& matrix, int target) {
-      size_t i = 0;
+      if (matrix.empty()) return false;
 
-      return std::any_of(matrix.begin(), matrix.end(), [target](const auto& row)
+      int i = 0, j = matrix[0].size() - 1;
+      // explanation:
+      // - if t < matrix[i][j], then t < matrix[i+1][j_] for all j_ > j,
+      //   so no need to consider the rest of the numbers for all subsequent rows
+      // - because each pointer only decreases in one direction, the time complexity
+      //   is O(n)
+      while (i < matrix.size() && j >= 0)
       {
-         return std::binary_search(row.begin(), row.end(), target);
-      });
+         if (matrix[i][j] > target) --j;
+         else if (matrix[i][j] < target) ++i;
+         else return true;
+      }
+
+      return false;
    }
 };
 
