@@ -13,14 +13,17 @@ public:
       {
          int mid = (right - left) / 2 + left;
 
+         // special case when left + 1 == right
          if (left == mid)
          {
             return nums[left] > nums[right] ? left : right;
          }
+         // e.g. 7 8 9 0 1
          if (nums[mid] > nums[left])
          {
             left = mid;
          }
+         // e.g. 7 8 9 0 1 2 3
          else
          {
             right = mid;
