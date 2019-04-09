@@ -3,7 +3,7 @@ include(FetchContent)
 FetchContent_Declare(
   catch
   GIT_REPOSITORY https://github.com/catchorg/Catch2.git
-  GIT_TAG        v2.5.0
+  GIT_TAG        v2.7.1
 )
 
 FetchContent_GetProperties(catch)
