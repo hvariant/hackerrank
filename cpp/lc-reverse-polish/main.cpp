@@ -1,5 +1,3 @@
-// https://leetcode.com/explore/interview/card/top-interview-questions-easy/92/array/578/
-
 #define CATCH_CONFIG_FAST_COMPILE
 #define CATCH_CONFIG_MAIN
 #include <catch2/catch.hpp>
