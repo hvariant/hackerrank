@@ -7,27 +7,33 @@ class Solution
 public:
     int majorityElement(const std::vector<int>& nums)
     {
-        std::unordered_map<int, size_t> freq;
+        int candidate = -1;
+        size_t counter = 0;
+
         for(auto n : nums)
         {
-            if(freq.count(n) == 0)
+            // There are at least as many non-candidates
+            // as candidates. If candidate is actually the majority
+            // it will show up later. For now we switch to a different one.
+            if(counter == 0)
             {
-                freq[n] = 1;
+                candidate = n;
+                counter = 1;
             }
             else
             {
-                freq[n]++;
-            }
-
-            if(freq[n] > nums.size()/2)
-            {
-                return n;
+                if(candidate == n)
+                {
+                    counter++;
+                }
+                else
+                {
+                    counter--;
+                }
             }
         }
 
-        // You may assume that the array is non-empty
-        // and the majority element always exist in the array.
-        return -1;
+        return candidate;
     }
 };
 
