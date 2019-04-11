@@ -6,26 +6,48 @@
 
 class Solution {
 public:
-    int maxArea(const std::vector<int>& height) {
+    size_t maxArea(const std::vector<int>& height) {
+        if(height.size() < 2) return 0;
+
         size_t r = 0;
+        {
+            size_t i = 0, j = height.size()-1;
+            // get a fast greedy solution first
+            while(i < j)
+            {
+                size_t area = (j - i) * std::min(height[i], height[j]);
+                r = std::max(area, r);
+
+                if(height[i] > height[j])
+                {
+                    j--;
+                }
+                else
+                {
+                    i++;
+                }
+            }
+        }
+
+        // use the greedy solution to prune
         for(size_t i=0;i<height.size();i++)
         {
+            if(height[i] * (height.size()-1 - i) <= r)
+            {
+                continue;
+            }
             for(size_t j=height.size()-1;j>=i+1;j--)
             {
-                // pruning
-                if(height[i] * (j-i) <= r)
+                if(height[j] * (j-i) <= r)
                 {
                     break;
                 }
 
-                size_t area = (j-i) * std::min(height[i], height[j]);
-
-                if(area > r)
-                {
-                    r = area;
-                }
+                size_t area = (j - i) * std::min(height[i], height[j]);
+                r = std::max(area, r);
             }
         }
+
         return r;
     }
 };
@@ -33,6 +55,8 @@ public:
 TEST_CASE("example 0")
 {
     Solution solution;
+    CHECK(solution.maxArea({1}) == 0);
+    CHECK(solution.maxArea({1, 2}) == 1);
     CHECK(solution.maxArea({1,8,6,2,5,4,8,3,7}) == 49);
     CHECK(solution.maxArea({2,3,4,5,18,17,6}) == 17);
 }
