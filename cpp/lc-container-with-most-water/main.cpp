@@ -12,7 +12,6 @@ public:
         size_t r = 0;
         {
             size_t i = 0, j = height.size()-1;
-            // get a fast greedy solution first
             while(i < j)
             {
                 size_t area = (j - i) * std::min(height[i], height[j]);
@@ -26,25 +25,6 @@ public:
                 {
                     i++;
                 }
-            }
-        }
-
-        // use the greedy solution to prune
-        for(size_t i=0;i<height.size();i++)
-        {
-            if(height[i] * (height.size()-1 - i) <= r)
-            {
-                continue;
-            }
-            for(size_t j=height.size()-1;j>=i+1;j--)
-            {
-                if(height[j] * (j-i) <= r)
-                {
-                    break;
-                }
-
-                size_t area = (j - i) * std::min(height[i], height[j]);
-                r = std::max(area, r);
             }
         }
 
