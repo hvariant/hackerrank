@@ -8,6 +8,21 @@ class Solution {
 public:
     int maxProduct(const std::vector<int>& nums)
     {
+       // dp_min[i] is the min product subarray that ends with i
+       // dp_max[i] is the max product subarray that ends with i
+       //
+       // it's obvious that when nums[i] is positive:
+       //   dp_max[i] = max(dp_max[i-1] * nums[i], nums[i])
+       // and when nums[i] is negative, dp_min[i-1] * nums[i] is
+       // the max product subarray that ends with i and i-1, therefore:
+       //   dp_max[i] = max(dp_min[i-1] * nums[i], nums[i])
+       //
+       // similarly, when nums[i] is positive:
+       //   dp_min[i] = min(dp_min[i-1] * nums[i], nums[i]);
+       // and when nums[i] is negative:
+       //   dp_min[i] = min(dp_max[i-1] * nums[i], nums[i]);
+
+
        int dp_min = nums[0];
        int dp_max = nums[0];
        int R = nums[0];
@@ -17,11 +32,20 @@ public:
           int dp_min_prev = dp_min;
           int dp_max_prev = dp_max;
 
-          dp_min = std::min(nums[i], dp_max_prev * nums[i]);
-          dp_min = std::min(dp_min, dp_min_prev * nums[i]);
-
-          dp_max = std::max(nums[i], dp_max_prev * nums[i]);
-          dp_max = std::max(dp_max, dp_min_prev * nums[i]);
+          if (nums[i] > 0)
+          {
+             dp_max = std::max(dp_max_prev * nums[i], nums[i]);
+             dp_min = std::min(dp_min_prev * nums[i], nums[i]);
+          }
+          else if(nums[i] < 0)
+          {
+             dp_max = std::max(dp_min_prev * nums[i], nums[i]);
+             dp_min = std::min(dp_max_prev * nums[i], nums[i]);
+          }
+          else
+          {
+             dp_min = dp_max = 0;
+          }
 
           R = std::max(R, dp_max);
        }
@@ -35,6 +59,7 @@ TEST_CASE("example 0")
    CHECK(Solution().maxProduct({ 2,3,-2,4 }) == 6);
    CHECK(Solution().maxProduct({ -2,0,-1 }) == 0);
    CHECK(Solution().maxProduct({ -2,3,-4 }) == 24);
+   CHECK(Solution().maxProduct({ 0,-1,4,-4,5,-2,-1,-1,-2,-3,0,-3,0,1,-1,-4,4,6,2,3,0,-5,2,1,-4,-2,-1,3,-4,-6,0,2,2,-1,-5,1,1,5,-6,2,1,-3,-6,-6,-3,4,0,-2,0,2 }) == 388800);
 }
 
 TEST_CASE("TLE")
