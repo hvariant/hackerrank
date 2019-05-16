@@ -10,6 +10,7 @@ struct ListNode {
 
 #include <vector>
 #include <optional>
+#include <queue>
 
 class Solution {
 public:
@@ -17,32 +18,29 @@ public:
       ListNode* sentinel = new ListNode(-1);
       ListNode* tail = sentinel;
 
-      std::vector<ListNode*> heads = lists;
-      while (true)
+      using HeadType = std::pair<int, ListNode*>;
+      auto Q = std::priority_queue<HeadType, std::vector<HeadType>, std::greater<HeadType>>{};
+      for (auto head : lists)
       {
-         std::optional<size_t> min_val_index_opt;
-         for (size_t i = 0; i < heads.size(); i++)
+         if (head)
          {
-            if (heads[i])
-            {
-               if (!min_val_index_opt.has_value()
-                  ||
-                  (min_val_index_opt.has_value() && heads[*min_val_index_opt]->val > heads[i]->val))
-               {
-                  min_val_index_opt = i;
-               }
-            }
+            Q.push({ head->val, head });
          }
-         if (!min_val_index_opt.has_value())
-         {
-            break;
-         }
+      }
 
-         size_t index = min_val_index_opt.value();
-         tail->next = new ListNode(heads[index]->val);
+      while (!Q.empty())
+      {
+         auto h = Q.top();
+         Q.pop();
 
+         tail->next = new ListNode(h.first);
          tail = tail->next;
-         heads[index] = heads[index]->next;
+
+         if (h.second->next)
+         {
+            auto h_next = h.second->next;
+            Q.push({ h_next->val, h_next });
+         }
       }
 
       ListNode* ret = sentinel->next;
