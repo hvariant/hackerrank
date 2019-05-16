@@ -3,8 +3,39 @@
 #include <catch2/catch.hpp>
 
 #include <unordered_map>
-#include <unordered_set>
 #include <queue>
+
+// a wild solution stolen from leetcode 24 ms sample submission:
+//class Solution {
+//public:
+//   int ladderLength(string beginWord, string endWord, vector<string>& wordList) {
+//      unordered_set<string> dict(wordList.begin(), wordList.end()), head{ beginWord }, tail{ endWord };
+//      if (dict.count(endWord) == 0) return 0;
+//      int i, res = 0;
+//      char ch, a;
+//      while (head.size()) {
+//         res++;
+//         unordered_set<string> t;
+//         for (string str : head) {
+//            dict.erase(str);
+//            for (i = 0; str[i]; i++) {
+//               ch = str[i];
+//               for (a = 'a'; a <= 'z'; a++) {
+//                  str[i] = a;
+//                  if (dict.count(str)) {
+//                     if (tail.count(str)) return res + 1;
+//                     t.insert(str);
+//                  }
+//               }
+//               str[i] = ch;
+//            }
+//         }
+//         if (t.size() < tail.size()) head.swap(t);
+//         else tail.swap(t), head.swap(t);
+//      }
+//      return 0;
+//   }
+//};
 
 class Solution {
 public:
@@ -36,10 +67,10 @@ public:
           str_to_index[allWords[i]] = i;
        }
 
-       std::unordered_set<size_t> vs;
        auto Q = std::queue<std::pair<size_t, size_t>>{};
        Q.push({ allWords.size() - 1, 1 });
-       vs.insert(allWords.size() - 1);
+       // the map act also acts as the visited set
+       str_to_index.erase(beginWord);
        while (!Q.empty())
        {
           auto cur = Q.front();
@@ -61,11 +92,8 @@ public:
                 if (str_to_index.count(next) > 0)
                 {
                    auto next_index = str_to_index.at(next);
-                   if (vs.count(next_index) == 0)
-                   {
-                      vs.insert(next_index);
-                      Q.push({ next_index, next_step });
-                   }
+                   str_to_index.erase(next);
+                   Q.push({ next_index, next_step });
                 }
              }
              next[i] = original_c;
