@@ -15,8 +15,8 @@ struct ListNode {
 class Solution {
 public:
    ListNode* mergeKLists(const std::vector<ListNode*>& lists) {
-      ListNode* sentinel = new ListNode(-1);
-      ListNode* tail = sentinel;
+      ListNode sentinel = ListNode(-1);
+      ListNode* tail = &sentinel;
 
       using HeadType = std::pair<int, ListNode*>;
       auto Q = std::priority_queue<HeadType, std::vector<HeadType>, std::greater<HeadType>>{};
@@ -43,8 +43,7 @@ public:
          }
       }
 
-      ListNode* ret = sentinel->next;
-      delete sentinel;
+      ListNode* ret = sentinel.next;
       return ret;
    }
 };
