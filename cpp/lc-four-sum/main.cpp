@@ -6,9 +6,9 @@
 
 class Solution {
 public:
-   size_t fourSumCount(std::vector<int>& A, std::vector<int>& B, std::vector<int>& C, std::vector<int>& D)
+   size_t fourSumCount(const std::vector<int>& A, const std::vector<int>& B, const std::vector<int>& C, const std::vector<int>& D)
    {
-      std::unordered_map<int, size_t> AB, CD;
+      std::unordered_map<int, size_t> AB;
       for (auto a : A)
       {
          for (auto b : B)
@@ -23,27 +23,16 @@ public:
             }
          }
       }
+
+      size_t R = 0;
       for (auto c : C)
       {
          for (auto d : D)
          {
-            if (CD.count(c + d) == 0)
+            if (AB.count(-(c + d)) > 0)
             {
-               CD[c + d] = 1;
+               R += AB.at(-(c + d));
             }
-            else
-            {
-               CD[c + d]++;
-            }
-         }
-      }
-
-      size_t R = 0;
-      for (auto ab : AB)
-      {
-         if (CD.count(-ab.first) != 0)
-         {
-            R += ab.second * CD.at(-ab.first);
          }
       }
 
