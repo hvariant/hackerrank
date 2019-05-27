@@ -2,54 +2,48 @@
 #define CATCH_CONFIG_MAIN
 #include <catch2/catch.hpp>
 
+#include <unordered_map>
+
 class Solution {
 public:
    size_t fourSumCount(std::vector<int>& A, std::vector<int>& B, std::vector<int>& C, std::vector<int>& D)
    {
-      std::sort(A.begin(), A.end());
-      std::sort(B.begin(), B.end());
-      std::sort(C.begin(), C.end());
-      std::sort(D.begin(), D.end());
-
-      size_t R{ 0 };
-
-      for (size_t A_i = 0; A_i < A.size(); A_i++)
+      std::unordered_map<int, size_t> AB, CD;
+      for (auto a : A)
       {
-         for (size_t B_i = 0; B_i < B.size(); B_i++)
+         for (auto b : B)
          {
-            int goal = -(A[A_i] + B[B_i]);
-
-            int i = 0;
-            int j = D.size() - 1;
-            while (j >= 0 && i < D.size())
+            if (AB.count(a + b) == 0)
             {
-               if (C[i] + D[j] == goal)
-               {
-                  size_t dup_C{ 0 };
-                  int i_next{ i };
-                  while (i_next < C.size() && C[i] == C[i_next]) i_next++;
-                  dup_C = i_next - i;
-
-                  size_t dup_D{ 0 };
-                  int j_next{ j };
-                  while (j_next >= 0 && D[j] == D[j_next]) j_next--;
-                  dup_D = j - j_next;
-                  
-                  // rule of product
-                  R += dup_D * dup_C;
-
-                  // at this point we can advance either i or j
-                  i = i_next;
-               }
-               else if (C[i] + D[j] > goal)
-               {
-                  j--;
-               }
-               else
-               {
-                  i++;
-               }
+               AB[a + b] = 1;
             }
+            else
+            {
+               AB[a + b]++;
+            }
+         }
+      }
+      for (auto c : C)
+      {
+         for (auto d : D)
+         {
+            if (CD.count(c + d) == 0)
+            {
+               CD[c + d] = 1;
+            }
+            else
+            {
+               CD[c + d]++;
+            }
+         }
+      }
+
+      size_t R = 0;
+      for (auto ab : AB)
+      {
+         if (CD.count(-ab.first) != 0)
+         {
+            R += ab.second * CD.at(-ab.first);
          }
       }
 
