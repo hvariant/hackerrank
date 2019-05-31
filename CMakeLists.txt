@@ -3,6 +3,7 @@ cmake_minimum_required(VERSION 3.8)
 include(catch2.cmake)
 
 add_subdirectory(cpp/attribute-parser/)
+add_subdirectory(cpp/lc-basic-calculator-ii/)
 add_subdirectory(cpp/bitset-1)
 add_subdirectory(cpp/lc-array-intersect/)
 add_subdirectory(cpp/lc-array-move-zeroes/)
