@@ -8,16 +8,23 @@ class Solution {
 public:
    int findDuplicate(const std::vector<int>& nums)
    {
-      for (size_t i = 0; i < nums.size(); i++)
+      int tortoise = nums[0];
+      int hare = nums[0];
+      do
       {
-         for (size_t j = i + 1; j < nums.size(); j++)
-         {
-            if (nums[i] == nums[j]) return nums[i];
-         }
+         tortoise = nums[tortoise];
+         hare = nums[nums[hare]];
+      } while (tortoise != hare);
+
+      hare = tortoise;
+      tortoise = nums[0];
+      while(hare != tortoise)
+      {
+         tortoise = nums[tortoise];
+         hare = nums[hare];
       }
 
-      // this is not possible
-      return -1;
+      return tortoise;
    }
 };
 
