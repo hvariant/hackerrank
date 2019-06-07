@@ -3,7 +3,7 @@
 #include <catch2/catch.hpp>
 
 #include <vector>
-#include <map>
+#include <queue>
 
 class Solution {
 public:
@@ -11,41 +11,29 @@ public:
     {
        if (k == 0) return {};
 
-       std::map<int, size_t, std::greater<int>> M;
+       std::deque<size_t> Q;
        std::vector<int> R;
 
        for (size_t i = 0; i < k; i++)
        {
-          if (M.count(nums[i]) == 0)
-          {
-             M[nums[i]] = 1;
-          }
-          else
-          {
-             M[nums[i]]++;
-          }
+          // remove less worthy numbers
+          while (!Q.empty() && nums[i] >= nums[Q.back()]) Q.pop_back();
+          Q.push_back(i);
        }
 
        for (size_t i = k; i < nums.size(); i++)
        {
-          R.push_back(M.begin()->first);
+          R.push_back(nums[Q.front()]);
 
-          M[nums[i - k]]--;
-          if (M[nums[i - k]] == 0)
-          {
-             M.erase(nums[i - k]);
-          }
+          // remove expired numbers
+          while (!Q.empty() && Q.front() <= i - k) Q.pop_front();
 
-          if (M.count(nums[i]) == 0)
-          {
-             M[nums[i]] = 1;
-          }
-          else
-          {
-             M[nums[i]]++;
-          }
+          // remove less worthy numbers
+          while (!Q.empty() && nums[i] >= nums[Q.back()]) Q.pop_back();
+
+          Q.push_back(i);
        }
-       R.push_back(M.begin()->first);
+       R.push_back(nums[Q.front()]);
 
        return R;
     }
