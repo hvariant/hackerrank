@@ -23,11 +23,11 @@ public:
 
         int area_left = std::inner_product(std::cbegin(heights), max_elem, std::cbegin(ps_left), 0,
                                            std::plus{},
-                                           [](auto const h, auto const m){ return std::abs(m - h); });
+                                           [](auto const h, auto const m){ return m - h; });
 
         int area_right = std::inner_product(std::crbegin(heights), rmax_elem, std::cbegin(ps_right), 0,
                                             std::plus{},
-                                            [](auto const h, auto const m){ return std::abs(m - h); });
+                                            [](auto const h, auto const m){ return m - h; });
 
         return area_left + area_right;
     }
